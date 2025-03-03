@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Темы</h1>
+<ul>
+    {% for thread in threads %}
+        <li>
+            <a href="{% url 'thread_detail' thread.id %}">{{ thread.name }}</a>
+            <a href="{% url 'thread_edit' thread.id %}">✏️</a>
+            <a href="{% url 'thread_delete' thread.id %}">🗑️</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<button data-bs-toggle="modal" data-bs-target="#createThreadModal">Создать тему</button>
+
+<div class="modal fade" id="createThreadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5>Создать тему</h5></div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
