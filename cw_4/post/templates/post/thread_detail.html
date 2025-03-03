@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ thread.name }}</h2>
+    <p>{{ thread.description }}</p>
+
+    <a href="{% url 'thread_edit' thread.id %}" class="btn btn-warning">Редактировать тред</a>
+    <a href="{% url 'thread_delete' thread.id %}" class="btn btn-danger" onclick="return confirm('Удалить этот тред?');">Удалить тред</a>
+
+    <h3 class="mt-4">Посты</h3>
+    <ul class="list-group">
+        {% for post in posts %}
+            <li class="list-group-item">
+                <h5>{{ post.title }}</h5>
+                <p>{{ post.description }}</p>
+                {% if post.picture %}
+                    <img src="{{ post.picture.url }}" alt="Изображение" class="img-fluid" style="max-width: 200px;">
+                {% endif %}
+                <p><strong>Автор:</strong> {{ post.author }}</p>
+                <a href="{% url 'post_edit' post.id %}" class="btn btn-sm btn-warning">Редактировать</a>
+                <a href="{% url 'post_delete' post.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Удалить этот пост?');">Удалить</a>
+            </li>
+        {% empty %}
+            <li class="list-group-item">Нет постов</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Кнопка для открытия модального окна -->
+    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createPostModal">
+        Добавить пост
+    </button>
+
+    <!-- Модальное окно для создания поста -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPostModalLabel">Добавить пост</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn
